@@ -13,35 +13,75 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Muhammed Ajmal &amp; Rosina Thesni">
   <meta property="og:title" content="Muhammed Ajmal &amp; Rosina Thesni — Wedding Invitation">
-  <meta property="og:description" content="Saturday, 14 November 2026 · AJWA Auditorium">
-  <meta property="og:url" content="https://ajmal-rosina.skenllp.com/">
-  <meta property="og:image" content="https://ajmal-rosina.skenllp.com/og.png">
-  <meta property="og:image:secure_url" content="https://ajmal-rosina.skenllp.com/og.png">
-  <meta property="og:image:type" content="image/png">
+  <meta property="og:description" content="Saturday, 14 November 2026 · AJWA Auditorium · Insha Allah">
+  <meta property="og:url" content="https://ajmal-rosina.vercel.app/">
+  <meta property="og:image" content="https://ajmal-rosina.vercel.app/og-image.jpg">
+  <meta property="og:image:secure_url" content="https://ajmal-rosina.vercel.app/og-image.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Muhammed Ajmal and Rosina Thesni — Wedding Invitation">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Muhammed Ajmal &amp; Rosina Thesni — Wedding Invitation">
-  <meta name="twitter:description" content="Saturday, 14 November 2026 · AJWA Auditorium">
-  <meta name="twitter:image" content="https://ajmal-rosina.skenllp.com/og.png">
-  <link rel="image_src" href="https://ajmal-rosina.skenllp.com/og.png">
-  <link rel="apple-touch-icon" href="https://ajmal-rosina.skenllp.com/og.png">
+  <meta name="twitter:description" content="Saturday, 14 November 2026 · AJWA Auditorium · Insha Allah">
+  <meta name="twitter:image" content="https://ajmal-rosina.vercel.app/og-image.jpg">
+  <link rel="image_src" href="https://ajmal-rosina.vercel.app/og-image.jpg">
+  <link rel="apple-touch-icon" href="https://ajmal-rosina.vercel.app/og-image.jpg">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Marcellus&family=Jost:wght@200;300;400;500&family=Noto+Sans+Malayalam:wght@300;400;500&display=swap">
 
-  <!-- Critical media only: cover, intro video, hero -->
-  <link rel="preload" as="image" href="open.png" fetchpriority="high">
-  <link rel="preload" as="video" href="vedio.mp4" type="video/mp4">
+  <!-- Structured Data — Wedding Event -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "Muhammed Ajmal & Rosina Thesni — Wedding Ceremony",
+    "description": "Wedding celebration of Muhammed Ajmal and Rosina Thesni",
+    "startDate": "2026-11-14T15:00:00+05:30",
+    "endDate": "2026-11-14T19:00:00+05:30",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "location": {
+      "@type": "Place",
+      "name": "AJWA Auditorium",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "IN"
+      }
+    },
+    "image": "https://ajmal-rosina.vercel.app/og-image.jpg",
+    "organizer": {
+      "@type": "Person",
+      "name": "Mr. Abdul Azeez & Mrs. Mumthaz"
+    },
+    "performer": [
+      {
+        "@type": "Person",
+        "name": "Muhammed Ajmal",
+        "description": "Groom, son of Mr. Abdul Azeez & Mrs. Mumthaz"
+      },
+      {
+        "@type": "Person",
+        "name": "Rosina Thesni",
+        "description": "Bride, daughter of Mr. Abdul Majeed & Mrs. Rasiya"
+      }
+    ]
+  }
+  </script>
+
+  <!-- Critical media only: cover and hero -->
+  <link rel="preload" as="image" href="assets/images/gallery/gate-couple.png" fetchpriority="high">
   <link rel="preload" as="audio" href="assets/audio/music.mp3" type="audio/mpeg">
-  <link rel="preload" as="image" href="hero.png">
+  <link rel="preload" as="image" href="hero.png?v=2">
 
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/scenes.css">
 </head>
 
-<body class="is-locked">
+<body class="is-locked gate-active">
 
   <!-- ============================================================
      ICON SPRITE  ·  all decorative motifs are inline SVG
@@ -138,78 +178,46 @@
 
 
   <!-- ============================================================
-     1 · LANDING COVER
+     OPENING GATE  ·  Initial entrance screen
      ============================================================ -->
-  <section id="landing" class="scene--screen" aria-label="Wedding invitation cover">
-    <div class="landing-media">
-      <img id="coverImg" class="cover-img section-bg" src="open.png"
-        data-fallbacks="assets/images/cover/cover.webp,assets/images/cover/cover.jpg" alt="" decoding="async"
-        fetchpriority="high">
-      <div class="cover-fallback" aria-hidden="true"></div>
+  <div id="gate">
+    <div class="gate-image">
+      <img src="assets/images/gallery/gate-couple.png" alt="Muhammed Ajmal and Rosina Thesni" />
     </div>
+    <div class="gate-fade"></div>
+    <div class="gate-vignette"></div>
 
-    <div class="rays rays--warm" aria-hidden="true"></div>
-    <div class="vignette" aria-hidden="true"></div>
-    <div class="temple-glow" aria-hidden="true"></div>
-    <div class="section-overlay landing-overlay" aria-hidden="true"></div>
+    <button type="button" id="gate-enter" class="gate-content" aria-label="Tap to open the invitation">
+      <span class="gate-corner tl"></span>
+      <span class="gate-corner tr"></span>
+      <span class="gate-corner bl"></span>
+      <span class="gate-corner br"></span>
 
-    <div class="landing-inner section-content">
-      <p class="landing-eyebrow">
-        <span class="ar" lang="ar">بسم الله الرحمن الرحيم</span>
-        <span class="en">IN THE NAME OF ALLAH: THE MOST BENEFICENT, THE MOST MERCIFUL</span>
-      </p>
+      <span class="gate-bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</span>
+      <span class="gate-translation">In the Name of Allah, the Most Gracious, the Most Merciful</span>
 
-      <div class="divider divider--sm" aria-hidden="true">
-        <span class="divider-line"></span>
-        <svg class="ico" aria-hidden="true">
-          <use href="#i-lotus"></use>
-        </svg>
-        <span class="divider-line"></span>
-      </div>
+      <span class="gate-ornament">
+        <span class="gate-line"></span>
+        <span class="gate-diamond"></span>
+        <span class="gate-line"></span>
+      </span>
 
-      <h1 class="landing-names">
-        <span class="n">Muhammed Ajmal</span>
-        <span class="amp">&amp;</span>
-        <span class="n">Rosina Thesni</span>
-      </h1>
+      <span class="gate-welcoming">Cordially Invites You</span>
+      <span class="gate-label">To the Wedding of</span>
+      <span class="gate-names">Muhammed Ajmal &amp; Rosina Thesni</span>
+      <span class="gate-date">14 · November · 2026</span>
 
-      <p class="landing-date">14 · 11 · 2026</p>
-
-      <button id="openBtn" class="btn-open" type="button">
-        <span class="btn-open__glow" aria-hidden="true"></span>
-        <span class="btn-open__ring" aria-hidden="true"></span>
-        <span class="btn-open__inner">
-          <svg class="ico btn-open__lamp" aria-hidden="true">
-            <use href="#i-lamp"></use>
-          </svg>
-          <span class="btn-open__label">
-            <span class="btn-open__en">Open Invitation</span>
-            <span class="btn-open__ml">Insha Allah</span>
-          </span>
-        </span>
-        <span class="btn-open__shimmer" aria-hidden="true"></span>
-      </button>
-
-      <p class="landing-hint" aria-hidden="true">Tap to begin</p>
-    </div>
-  </section>
+      <span class="gate-tap">
+        <span class="gate-tap-ring"></span>
+        <span class="gate-tap-icon"><svg class="ico"><use href="#i-lamp"></use></svg></span>
+      </span>
+      <span class="gate-tap-text">Tap to Open Invitation</span>
+    </button>
+  </div>
 
 
   <!-- ============================================================
-     2 · INVITATION REVEAL VIDEO
-     ============================================================ -->
-  <section id="reveal" aria-hidden="true">
-    <video id="revealVideo" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture
-      controlslist="nodownload noplaybackrate noremoteplayback">
-      <source src="vedio.mp4" type="video/mp4">
-    </video>
-    <div class="reveal-fade" aria-hidden="true"></div>
-    <button id="skipBtn" class="btn-skip" type="button" hidden>Skip</button>
-  </section>
-
-
-  <!-- ============================================================
-     3 · THE SITE
+     THE SITE
      ============================================================ -->
   <main id="site">
 
@@ -217,31 +225,29 @@
     <!-- Image fills the whole screen; content sits in that image's safe centre -->
     <section id="hero" class="scene scene--screen scene--hero" aria-busy="true">
       <picture class="section-bg">
-        <img id="heroImg" class="section-bg" src="hero.png" data-candidates="hero.png"
+        <img id="heroImg" class="section-bg" src="hero.png?v=2" data-candidates="hero.png?v=2"
           alt="Muhammed Ajmal &amp; Rosina Thesni" width="1080" height="1920" decoding="async" fetchpriority="high">
       </picture>
 
       <div class="section-overlay" aria-hidden="true"></div>
 
-      <!-- Hero section texts commented out
-    <div class="section-content">
-      <p class="hero-bless">
-        <span class="hero-bless__ml" lang="ar">بسم الله الرحمن الرحيم</span>
-        <span class="hero-bless__en">IN THE NAME OF ALLAH: THE MOST BENEFICENT, THE MOST MERCIFUL</span>
-      </p>
+      <div class="section-content">
+        <p class="hero-bless">
+          <span class="hero-bless__ml" lang="ar">بسم الله الرحمن الرحيم</span>
+          <span class="hero-bless__en">IN THE NAME OF ALLAH: THE MOST BENEFICENT, THE MOST MERCIFUL</span>
+        </p>
 
-      <h1 class="hero-names">
-        <span class="hero-names__n">Muhammed Ajmal</span>
-        <span class="hero-names__amp" aria-hidden="true">&amp;</span>
-        <span class="hero-names__n">Rosina Thesni</span>
-      </h1>
+        <h1 class="hero-names">
+          <span class="hero-names__n">Muhammed Ajmal</span>
+          <span class="hero-names__amp" aria-hidden="true">&amp;</span>
+          <span class="hero-names__n">Rosina Thesni</span>
+        </h1>
 
-      <p class="hero-date">
-        <span class="hero-date__en">Saturday · 14 November 2026</span>
-        <span class="hero-date__ml">Insha Allah · 3.00 PM</span>
-      </p>
-    </div>
-    -->
+        <p class="hero-date">
+          <span class="hero-date__en">Saturday · 14 November 2026</span>
+          <span class="hero-date__ml">Insha Allah · 3:00 PM</span>
+        </p>
+      </div>
 
       <a class="scroll-indicator" href="#details" aria-label="Scroll to wedding details">
         <span class="scroll-indicator__word">Scroll</span>

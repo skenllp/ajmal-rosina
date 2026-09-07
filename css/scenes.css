@@ -19,10 +19,10 @@
   --content-wide: 68rem;
 
   /* Hero artwork safe zone — % of the FULL SCREEN section
-     (tuned to the gold dividers / clear centre of the mandapam) */
-  --hero-safe-top: 26%;
-  --hero-safe-bottom: 20%;
-  --hero-safe-side: 11%;
+     (tuned to the arch center and clear space in the image) */
+  --hero-safe-top: 22%;
+  --hero-safe-bottom: 18%;
+  --hero-safe-side: 10%;
 }
 
 /* ---------- Base scene ---------- */
@@ -209,7 +209,7 @@ img.section-bg{
   width:100%;
   height:100%;
   margin:0;
-  padding:clamp(0.25rem, 2%, 0.75rem);
+  padding:clamp(0.5rem, 2.5%, 1rem);
   display:flex;
   flex-direction:column;
   justify-content:center;
@@ -232,8 +232,9 @@ img.section-bg{
 
 .scene--hero .section-overlay{
   background:
-    radial-gradient(70% 40% at 50% 18%,rgba(255,240,210,.12),transparent 70%),
-    linear-gradient(180deg,rgba(255,246,225,.05) 0%,transparent 20%,transparent 72%,rgba(250,240,220,.28) 100%);
+    radial-gradient(ellipse 55% 70% at 50% 48%, rgba(14,10,6,.72) 0%, rgba(14,10,6,.45) 35%, transparent 65%),
+    radial-gradient(ellipse 100% 65% at 50% 50%, transparent 15%, rgba(14,10,6,.25) 40%, rgba(14,10,6,.65) 100%),
+    linear-gradient(180deg, rgba(20,14,8,.15) 0%, transparent 25%, transparent 65%, rgba(14,10,6,.45) 100%);
 }
 
 /* Wider screens crop more of the portrait sides — keep centre safe, nudge sides in */
