@@ -9,7 +9,7 @@
   'use strict';
 
   // Paste your deployed Google Apps Script Web App URL here.
-  var RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbyC2BJzgG8_X05plD3xruk9XaPn3C9nVeG-LiAXS8F_AiCT9QbMvUyrcIygYdOi5d63/exec";
+  var RSVP_ENDPOINT = 'https://script.google.com/macros/s/AKfycbx2Wsr5WMZO-6M7TctIgUGph1bjpRq_fpf3swJsoyy5dKVI-wx_mYB5n9FMR3cla_PF/exec';
 
   function initRSVP() {
     var form = document.getElementById('rsvpForm');
