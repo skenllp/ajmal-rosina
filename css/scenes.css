@@ -232,9 +232,7 @@ img.section-bg{
 
 .scene--hero .section-overlay{
   background:
-    radial-gradient(ellipse 55% 70% at 50% 48%, rgba(14,10,6,.72) 0%, rgba(14,10,6,.45) 35%, transparent 65%),
-    radial-gradient(ellipse 100% 65% at 50% 50%, transparent 15%, rgba(14,10,6,.25) 40%, rgba(14,10,6,.65) 100%),
-    linear-gradient(180deg, rgba(20,14,8,.15) 0%, transparent 25%, transparent 65%, rgba(14,10,6,.45) 100%);
+    linear-gradient(180deg, rgba(14,10,6,.18) 0%, transparent 20%, transparent 70%, rgba(14,10,6,.38) 100%);
 }
 
 /* Wider screens crop more of the portrait sides — keep centre safe, nudge sides in */
