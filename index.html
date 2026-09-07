@@ -594,6 +594,69 @@
     </section>
 
 
+    <!-- ---------- RSVP ---------- -->
+    <section id="rsvp" class="scene scene--flow scene--beige">
+      <img class="section-bg" src="assets/images/decorations/wash-beige.svg" alt="" loading="lazy" decoding="async">
+      <div class="section-overlay" aria-hidden="true"></div>
+      <div class="section-content">
+        <div class="sec-head reveal">
+          <p class="kicker">Kindly Respond</p>
+          <h2 class="sec-title">RSVP</h2>
+          <div class="divider" aria-hidden="true">
+            <span class="divider-line"></span>
+            <svg class="ico" aria-hidden="true">
+              <use href="#i-ring"></use>
+            </svg>
+            <span class="divider-line"></span>
+          </div>
+          <p class="sec-note">Your presence is the greatest gift. Please let us know if you'll be joining us, and
+            how many members will be coming along.</p>
+        </div>
+
+        <form id="rsvpForm" class="rsvp-card reveal" data-delay="1" novalidate>
+          <div class="rsvp-row">
+            <div class="rsvp-field">
+              <label for="rsvpName">Full Name</label>
+              <input type="text" id="rsvpName" name="name" required placeholder="Your name">
+            </div>
+            <div class="rsvp-field">
+              <label for="rsvpPhone">Phone Number</label>
+              <input type="tel" id="rsvpPhone" name="phone" placeholder="Contact number">
+            </div>
+          </div>
+
+          <div class="rsvp-row">
+            <div class="rsvp-field">
+              <label for="rsvpGuests">Number of Members Coming</label>
+              <input type="number" id="rsvpGuests" name="guests" min="1" max="20" value="1" inputmode="numeric"
+                required>
+            </div>
+            <div class="rsvp-field">
+              <span class="rsvp-label-static">Will you attend?</span>
+              <div class="rsvp-toggle" role="radiogroup" aria-label="Will you attend?">
+                <input type="radio" id="rsvpYes" name="attend" value="yes" checked>
+                <label for="rsvpYes">Joyfully Accept</label>
+                <input type="radio" id="rsvpNo" name="attend" value="no">
+                <label for="rsvpNo">Regretfully Decline</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="rsvp-field rsvp-field--full">
+            <label for="rsvpMessage">Message for the Couple (optional)</label>
+            <textarea id="rsvpMessage" name="message" rows="3"
+              placeholder="Share your wishes and prayers..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn--gold rsvp-submit">
+            <span class="rsvp-btn-text">Send RSVP</span>
+          </button>
+          <p class="rsvp-status" id="rsvpStatus" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
+
     <!-- ---------- GALLERY ---------- -->
     <section id="gallery" class="scene scene--flow scene--ivory">
       <img class="section-bg" src="assets/images/decorations/wash-ivory.svg" alt="" loading="lazy" decoding="async">
@@ -761,6 +824,7 @@
 
   <script src="js/particles.js" defer></script>
   <script src="js/main.js" defer></script>
+  <script src="js/rsvp.js" defer></script>
 </body>
 
 </html>
