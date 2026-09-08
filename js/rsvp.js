@@ -11,7 +11,7 @@
   'use strict';
 
   // Paste your deployed Google Apps Script Web App URL here.
-  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbx2Wsr5WMZO-6M7TctIgUGph1bjpRq_fpf3swJsoyy5dKVI-wx_mYB5n9FMR3cla_PF/exec';
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbxkluvbMfAe1k9iVssY-D_i8JQKr8L3Y7vqlLM2zrQYlNlONi0tQYbO9AHcLjitYu3w/exec';
 
   function isConfigured() {
     return !!ENDPOINT && ENDPOINT.indexOf('PASTE_') !== 0;
