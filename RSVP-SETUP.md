@@ -1,102 +1,52 @@
-# RSVP + Wishes Wall → Google Sheet setup
+# RSVP Google Sheets Setup Guide
 
-The site has **three** things that talk to Google Sheets through one Apps
-Script Web App:
+## Step 1 — Create the Google Sheet
+1. Go to [sheets.google.com](https://sheets.google.com) and create a new blank spreadsheet
+2. Name it **"Ajmal & Rosina — Wedding RSVP"**
 
-1. **RSVP for Bride's Home Visit** (`#rsvpBrideForm`) — name, number of
-   people attending, attending yes/no. **No phone number is collected.**
-2. **RSVP for Wedding** (`#rsvpWeddingForm`) — name, phone, number of
-   people attending, attending yes/no, optional message.
-3. **Wishes Wall** (`#wishForm`) — name + wish, moderated before it's
-   shown publicly on the site.
+## Step 2 — Open Apps Script
+1. In the spreadsheet, click **Extensions → Apps Script**
+2. Delete all existing code in the editor
+3. Paste the full contents of **`google-apps-script.js`** from this project
+4. Click **Save** (💾)
 
-Each goes to its own tab in the same spreadsheet, and each RSVP tab keeps
-a live, always-correct **total number of people attending** (not a count
-of submissions) using spreadsheet formulas.
-
-## 1. Create the Google Sheet
-
-1. Go to [sheets.google.com](https://sheets.google.com) and create a new,
-   blank spreadsheet. Name it something like "Ajmal & Rosina — RSVPs".
-2. You don't need to add any headers or columns yourself — the script
-   creates each tab automatically the first time it's needed.
-
-## 2. Add the Apps Script
-
-1. In the sheet, go to **Extensions → Apps Script**.
-2. Delete the placeholder code in `Code.gs` and paste in the contents of
-   `google-apps-script/Code.gs` from this project.
-3. Click **Save** (the disk icon), and name the project (e.g. "Wedding API").
-
-## 3. Deploy it as a Web App
-
-1. Click **Deploy → New deployment**.
-2. Click the gear icon next to "Select type" and choose **Web app**.
-3. Set:
-   - **Execute as:** Me
-   - **Who has access:** Anyone
-4. Click **Deploy**, and authorize the script when prompted (you'll see an
-   "unverified app" warning since it's your own script — click **Advanced
-   → Go to (project name)** to proceed).
-5. Copy the **Web app URL** it gives you — it looks like:
+## Step 3 — Deploy as Web App
+1. Click **Deploy → New deployment**
+2. Click the gear icon ⚙️ next to "Select type" → choose **Web app**
+3. Set the following:
+   - **Description**: Wedding RSVP
+   - **Execute as**: Me
+   - **Who has access**: **Anyone**
+4. Click **Deploy**
+5. **Copy the Web App URL** — it looks like:
    `https://script.google.com/macros/s/AKfycb.../exec`
 
-## 4. Connect the site to the sheet
-
-1. Open `js/rsvp.js`.
-2. Replace this line near the top:
+## Step 4 — Paste URL into rsvp.js
+1. Open `js/rsvp.js` in this project
+2. Find the line:
    ```js
-   var ENDPOINT = 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+   var ENDPOINT = '...';
    ```
-   with your Web app URL:
-   ```js
-   var ENDPOINT = 'https://script.google.com/macros/s/AKfycb.../exec';
-   ```
-3. Save, re-upload/redeploy the site, and submit a test RSVP and a test wish.
+3. Replace the URL with your copied Web App URL
+4. Save the file
 
-## Reading the results
+## Step 5 — Test It
+1. Open the website and submit an RSVP
+2. Go back to your Google Sheet — you should see two new sheets:
+   - **RSVP** — all wedding RSVPs with name, phone, guests count, etc.
+   - **Wishes** — all wishes (set "Approved" column to "yes" to show on site)
 
-Open the Google Sheet — it will contain three tabs:
+## Viewing Total Guest Count
+In your RSVP sheet, you can add a summary anywhere:
 
-### "Bride Home Visit RSVP"
-Columns: `Timestamp, Name, Guests, Attending`. No phone number column.
-Summary box in columns F–G:
+| Formula | What it shows |
+|---------|--------------|
+| `=COUNTA(B:B)-1` | Total number of RSVPs |
+| `=SUMIF(G:G,"wedding_reception",D:D)` | Total people attending wedding |
+| `=COUNTIF(E:E,"yes")` | Number who confirmed attendance |
+| `=COUNTIF(E:E,"no")` | Number who declined |
 
-| | |
-|---|---|
-| **Total Confirmed People** | live `SUMIF` of the Guests column, counting only "Yes" rows |
-| **Total Confirmed RSVPs** | `COUNTIF` of "Yes" rows |
-| **Total Declined RSVPs** | `COUNTIF` of "No" rows |
-
-### "Wedding RSVP"
-Columns: `Timestamp, Name, Phone, Guests, Attending, Message`. Same style
-of summary box, in columns H–I.
-
-### "Wishes"
-Columns: `Timestamp, Name, Wish, Approved`. Every new wish is inserted
-with `Approved = FALSE`. **The website only shows wishes where you've
-manually set `Approved` to `TRUE`** — this is the moderation step, so
-open the sheet, review new wishes, and flip the checkbox/value to `TRUE`
-for the ones you want public.
-
-The website polls `?action=wishes` for approved wishes on load and every
-couple of minutes while the tab is open, so newly-approved wishes appear
-without anyone having to edit the site.
-
-## Privacy
-
-- The Bride's Home Visit and Wedding RSVP tabs (including phone numbers,
-  guest counts, and messages) are only visible to you in the Google Sheet
-  — the website never reads or displays them.
-- The `?action=wishes` endpoint only ever returns `name` + `wish` for
-  rows marked `Approved = TRUE`. It never returns phone numbers, RSVP
-  data, or unapproved wishes.
-
-## Notes
-
-- If you ever change the deployment (e.g. redeploy a new version), Apps
-  Script gives you a new URL unless you choose **Manage deployments →
-  Edit → same deployment** — update `js/rsvp.js` if the URL changes.
-- Every form works without JavaScript errors even before you connect the
-  endpoint — it will just show a friendly "not connected yet" message
-  instead of silently failing.
+## Re-deploying after code changes
+If you update the Apps Script code, you must create a **new deployment** (not edit existing):
+1. Deploy → New deployment
+2. Use the **new** URL in `rsvp.js`
