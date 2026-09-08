@@ -612,6 +612,11 @@
               <label for="brideRsvpName">Full Name</label>
               <input type="text" id="brideRsvpName" name="name" required placeholder="Your name">
             </div>
+            <div class="rsvp-field">
+              <label for="brideRsvpGuests">Number of People Attending</label>
+              <input type="number" id="brideRsvpGuests" name="guests" min="1" max="20" value="1" inputmode="numeric"
+                required>
+            </div>
           </div>
 
           <div class="rsvp-field rsvp-field--full">
@@ -704,20 +709,19 @@
               <input type="text" id="rsvpName" name="name" required placeholder="Your name">
             </div>
             <div class="rsvp-field">
-              <label for="rsvpPhone">Phone Number</label>
-              <input type="tel" id="rsvpPhone" name="phone" required placeholder="Contact number">
+              <label for="rsvpGuests">Number of People Attending</label>
+              <input type="number" id="rsvpGuests" name="guests" min="1" max="20" value="1" inputmode="numeric"
+                required>
             </div>
           </div>
 
-          <div class="rsvp-row">
-            <div class="rsvp-field">
-              <span class="rsvp-label-static">Will You Attend?</span>
-              <div class="rsvp-toggle" role="radiogroup" aria-label="Will you attend the Wedding?">
-                <input type="radio" id="rsvpYes" name="attend" value="yes" checked>
-                <label for="rsvpYes">Yes, I'll Attend</label>
-                <input type="radio" id="rsvpNo" name="attend" value="no">
-                <label for="rsvpNo">No, I Can't Attend</label>
-              </div>
+          <div class="rsvp-field rsvp-field--full">
+            <span class="rsvp-label-static">Will You Attend?</span>
+            <div class="rsvp-toggle" role="radiogroup" aria-label="Will you attend the Wedding?">
+              <input type="radio" id="rsvpYes" name="attend" value="yes" checked>
+              <label for="rsvpYes">Yes, I'll Attend</label>
+              <input type="radio" id="rsvpNo" name="attend" value="no">
+              <label for="rsvpNo">No, I Can't Attend</label>
             </div>
           </div>
 

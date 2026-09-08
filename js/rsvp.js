@@ -55,14 +55,7 @@
       }
 
       var attendEl = form.querySelector('[name="attend"]:checked');
-      var phoneEl = form.querySelector('[name="phone"]');
       var messageEl = form.querySelector('[name="message"]');
-
-      if (phoneEl && phoneEl.hasAttribute('required') && !phoneEl.value.trim()) {
-        setStatus(statusEl, 'Please enter your phone number.', 'error');
-        phoneEl.focus();
-        return;
-      }
 
       var data = {
         eventType: eventType,
@@ -70,7 +63,6 @@
         guests: guests,
         attend: attendEl ? attendEl.value : 'yes'
       };
-      if (phoneEl) data.phone = phoneEl.value.trim();
       if (messageEl) data.message = messageEl.value.trim();
 
       if (!isConfigured()) {
