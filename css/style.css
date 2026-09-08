@@ -3344,7 +3344,13 @@ body.finale-particles .finale-fallback {
 
 #hero.loaded .scroll-indicator {
   opacity: 1;
-  animation: fadeIn 1s ease 1.4s forwards;
+  animation: fadeIn 1s ease 0.5s forwards;
+}
+
+/* Show scroll even without .loaded class */
+#hero .scroll-indicator {
+  opacity: 0;
+  animation: fadeIn 1s ease 1s forwards;
 }
 
 /* Make sure hero content is hidden initially */
