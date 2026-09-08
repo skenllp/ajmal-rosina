@@ -1,17 +1,27 @@
 /* ============================================================
    Cinematic flow controller
-   Gate opening → hero → scroll journey
+   Landing cover → invitation video → hero → scroll journey
+
+   Cover stays visible until the video can actually play, so the
+   visitor never sees a blank loading beat between tap and playback.
    ============================================================ */
 (function () {
   'use strict';
 
   var body = document.body;
-  var gate = document.getElementById('gate');
-  var gateEnterBtn = document.getElementById('gate-enter');
+  var landing = document.getElementById('landing');
+  var openBtn = document.getElementById('openBtn');
+  var revealBox = document.getElementById('reveal');
+  var video = document.getElementById('revealVideo');
+  var skipBtn = document.getElementById('skipBtn');
   var heroImg = document.getElementById('heroImg');
 
+  var COVER_FADE_MS = 420;
+  var READY_TIMEOUT_MS = 10000;
+  var PLAY_SAFETY_MS = 14000;
+
   /* ---------------------------------------------------------
-     0 · Ambient audio  ·  disc control + play after gate open
+     0 · Ambient audio  ·  disc control + play after cover open
      --------------------------------------------------------- */
   var bgAudio = document.getElementById('bgAudio');
   var audioBtn = document.getElementById('audioBtn');
@@ -144,62 +154,59 @@
   }
 
   /* ---------------------------------------------------------
-     3 · Gate opening logic
+     3 · Video preload  ·  starts the moment the page opens
      --------------------------------------------------------- */
-  var opened = false;
+  var videoReady = false;
+  var opening = false;
+  var finished = false;
+  var safety = 0;
+  var readyWait = 0;
 
-  function openGate() {
-    if (opened) return;
-    opened = true;
-
-    gate.classList.add('gate-closing');
-    body.classList.remove('gate-active');
-    body.classList.add('page-loaded', 'is-revealed');
-
-    // Start music with the gate opening
-    startAmbientAudio();
-
-    window.setTimeout(function () {
-      gate.classList.add('gate-hidden');
-      gate.setAttribute('aria-hidden', 'true');
-      
-      // Initialize everything after gate closes
-      unlockScroll();
-      initReveals();
-      initGalleryWall();
-      activateLazySections();
-      
-      var heroEl = document.getElementById('hero');
-      if (heroEl) {
-        heroEl.classList.add('loaded', 'text-ready');
-        heroEl.setAttribute('aria-busy', 'false');
-      }
-    }, 1100);
+  function markVideoReady() {
+    videoReady = true;
   }
 
-  if (gateEnterBtn) {
-    gateEnterBtn.addEventListener('click', openGate);
-    gateEnterBtn.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        openGate();
-      }
-    });
+  function isVideoReady() {
+    /* HAVE_FUTURE_DATA (3) / HAVE_ENOUGH_DATA (4) — enough to start without a stall */
+    return video && !video.error && video.readyState >= 3;
   }
 
-  if (gate) {
-    gate.addEventListener('click', function (e) {
-      if (e.target.closest && e.target.closest('button')) return;
-      openGate();
-    });
+  function beginVideoPreload() {
+    if (!video) return;
+
+    video.muted = true;
+    video.setAttribute('muted', '');
+    video.playsInline = true;
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+    video.preload = 'auto';
+
+    /* Force the network request even when the element is hidden */
+    try { video.load(); } catch (e) {}
+
+    var onReady = function () {
+      markVideoReady();
+      video.removeEventListener('canplay', onReady);
+      video.removeEventListener('canplaythrough', onReady);
+      video.removeEventListener('loadeddata', onReady);
+    };
+
+    video.addEventListener('canplay', onReady);
+    video.addEventListener('canplaythrough', onReady);
+    video.addEventListener('loadeddata', onReady);
+
+    if (isVideoReady()) markVideoReady();
   }
+
+  beginVideoPreload();
 
   /* ---------------------------------------------------------
      4 · Hero gate  ·  never show until bg is loaded + decoded
      --------------------------------------------------------- */
   var heroEl = document.getElementById('hero');
+  var heroReadyPromise = null;
   var heroIsReady = false;
-  var TEXT_REVEAL_MS = 520;
+  var TEXT_REVEAL_MS = 520; /* after .loaded fade starts */
 
   var HERO_CANDIDATES = (
     (heroImg && heroImg.getAttribute('data-candidates')) ||
@@ -223,6 +230,7 @@
       probe.onerror = function () { reject(new Error('fail ' + url)); };
       probe.src = url;
 
+      /* Cached image may already be complete */
       if (probe.complete && probe.naturalWidth > 0) succeed();
     });
   }
@@ -237,22 +245,277 @@
     });
   }
 
+  function warmFonts() {
+    if (!(document.fonts && document.fonts.load)) return Promise.resolve();
+    return Promise.all([
+      document.fonts.load('300 48px "Cormorant Garamond"'),
+      document.fonts.load('400 18px Marcellus'),
+      document.fonts.load('300 14px "Noto Sans Malayalam"')
+    ]).catch(function () {});
+  }
+
   function applyHeroUrl(url) {
     if (!heroImg || !url) return Promise.resolve();
+
+    var isAvif = /\.avif($|\?)/i.test(url);
+    var isWebp = /\.webp($|\?)/i.test(url);
+    var avifSource = document.getElementById('heroSourceAvif');
+    var webpSource = document.getElementById('heroSourceWebp');
+
+    if (avifSource) {
+      if (isAvif) avifSource.srcset = url;
+      else avifSource.removeAttribute('srcset');
+    }
+    if (webpSource) {
+      if (isWebp) webpSource.srcset = url;
+      else if (isAvif) webpSource.srcset = 'assets/images/hero/hero.webp';
+      else webpSource.removeAttribute('srcset');
+    }
+
     heroImg.src = url;
+
     if (heroImg.decode) {
       return heroImg.decode().catch(function () {});
     }
     return Promise.resolve();
   }
 
-  // Preload hero image on page load
-  if (document.readyState === 'complete') {
-    firstAvailable(HERO_CANDIDATES).then(applyHeroUrl);
-  } else {
-    window.addEventListener('load', function() {
-      firstAvailable(HERO_CANDIDATES).then(applyHeroUrl);
+  function ensureHeroReady() {
+    if (heroIsReady) return Promise.resolve(true);
+    if (heroReadyPromise) return heroReadyPromise;
+
+    heroReadyPromise = firstAvailable(HERO_CANDIDATES)
+      .then(function (url) {
+        return applyHeroUrl(url).then(function () { return url; });
+      })
+      .then(function () {
+        return warmFonts();
+      })
+      .then(function () {
+        heroIsReady = true;
+        if (heroEl) {
+          /* Paint one frame while still under the video / hidden */
+          void heroEl.offsetWidth;
+        }
+        return true;
+      })
+      .catch(function () {
+        /* Absolute fallback — paint the PNG rather than stall forever */
+        if (heroImg) heroImg.src = 'hero.png';
+        heroIsReady = true;
+        return false;
+      });
+
+    return heroReadyPromise;
+  }
+
+  /* Start hero preload once the intro has enough video data (video wins the pipe) */
+  function scheduleHeroWarm() {
+    if (heroReadyPromise) return;
+    if (isVideoReady() || !video) {
+      ensureHeroReady();
+      return;
+    }
+    var once = function () {
+      video.removeEventListener('canplay', once);
+      ensureHeroReady();
+    };
+    video.addEventListener('canplay', once);
+    setTimeout(function () { ensureHeroReady(); }, 5000);
+  }
+
+  if (document.readyState === 'complete') scheduleHeroWarm();
+  else window.addEventListener('load', scheduleHeroWarm);
+
+  /* ---------------------------------------------------------
+     5 · Landing → video → hero
+     --------------------------------------------------------- */
+  function revealHeroAndSite() {
+    if (heroEl) {
+      heroEl.classList.add('loaded');
+      heroEl.setAttribute('aria-busy', 'false');
+    }
+
+    body.classList.add('is-revealed');
+    unlockScroll();
+    initReveals();
+    initGalleryWall();
+    activateLazySections();
+
+    /* Background fade first; typography follows */
+    setTimeout(function () {
+      if (heroEl) heroEl.classList.add('text-ready');
+    }, TEXT_REVEAL_MS);
+
+    revealBox.classList.remove('is-armed', 'is-on');
+    revealBox.classList.add('is-out', 'is-live');
+
+    setTimeout(function () {
+      revealBox.classList.add('is-gone');
+      revealBox.setAttribute('aria-hidden', 'true');
+      try {
+        video.pause();
+        video.removeAttribute('src');
+        while (video.firstChild) video.removeChild(video.firstChild);
+        video.load();
+      } catch (e) {}
+    }, 900);
+  }
+
+  function finishReveal() {
+    if (finished) return;
+    finished = true;
+    clearTimeout(safety);
+    clearTimeout(readyWait);
+
+    /* Freeze the last frame so the visitor never sees black while Hero decodes */
+    try {
+      video.pause();
+      if (video.duration && isFinite(video.duration)) {
+        video.currentTime = Math.max(0, video.duration - 0.05);
+      }
+    } catch (e) {}
+
+    ensureHeroReady().then(function () {
+      revealHeroAndSite();
     });
+  }
+
+  function startPlaybackUnderCover() {
+    if (finished) return;
+
+    /* Decode Hero in parallel while the visitor watches the video */
+    ensureHeroReady();
+
+    /* Arm the video layer UNDER the cover (z-index 60 < 70).
+       It paints and plays while the cover still hides it. */
+    revealBox.classList.add('is-armed');
+    revealBox.removeAttribute('aria-hidden');
+
+    try { video.currentTime = 0; } catch (e) {}
+
+    var coverLifted = false;
+    function liftCover() {
+      if (coverLifted || finished) return;
+      coverLifted = true;
+
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          landing.classList.remove('is-opening');
+          landing.classList.add('is-out');
+
+          setTimeout(function () {
+            landing.classList.add('is-gone');
+            revealBox.classList.add('is-on', 'is-live');
+            revealBox.classList.remove('is-armed');
+          }, COVER_FADE_MS);
+        });
+      });
+    }
+
+    function onPlaying() {
+      video.removeEventListener('playing', onPlaying);
+      liftCover();
+      ensureHeroReady();
+    }
+    video.addEventListener('playing', onPlaying);
+
+    var attempt = video.play();
+    if (attempt && attempt.then) {
+      attempt.then(function () {
+        if (!video.paused) liftCover();
+      }).catch(function () {
+        video.muted = true;
+        video.setAttribute('muted', '');
+        var retry = video.play();
+        if (retry && retry.then) {
+          retry.then(function () {
+            if (!video.paused) liftCover();
+          }).catch(function () {
+            video.removeEventListener('playing', onPlaying);
+            finishReveal();
+          });
+        } else {
+          video.removeEventListener('playing', onPlaying);
+          finishReveal();
+        }
+      });
+    } else if (!video.paused) {
+      liftCover();
+    }
+
+    setTimeout(function () {
+      if (!coverLifted && !finished) liftCover();
+    }, 900);
+
+    setTimeout(function () { if (!finished && skipBtn) skipBtn.hidden = false; }, 5000);
+
+    safety = setTimeout(function () {
+      if (!finished && (video.readyState < 2 || video.paused)) finishReveal();
+    }, PLAY_SAFETY_MS);
+  }
+
+  function whenVideoReady(done) {
+    if (isVideoReady() || videoReady) {
+      done();
+      return;
+    }
+
+    var settled = false;
+    function settle() {
+      if (settled) return;
+      settled = true;
+      video.removeEventListener('canplay', settle);
+      video.removeEventListener('canplaythrough', settle);
+      video.removeEventListener('loadeddata', settle);
+      clearTimeout(readyWait);
+      done();
+    }
+
+    video.addEventListener('canplay', settle);
+    video.addEventListener('canplaythrough', settle);
+    video.addEventListener('loadeddata', settle);
+
+    /* Keep nudging the buffer while the cover stays up */
+    try { video.load(); } catch (e) {}
+
+    readyWait = setTimeout(settle, READY_TIMEOUT_MS);
+  }
+
+  function openInvitation() {
+    if (opening || finished) return;
+
+    opening = true;
+    if (openBtn) openBtn.disabled = true;
+    landing.classList.add('is-opening');
+
+    /* Kick off music in the same user gesture so unmuted play is allowed */
+    startAmbientAudio();
+
+    if (!video) { finishReveal(); return; }
+    whenVideoReady(startPlaybackUnderCover);
+  }
+
+  if (openBtn) openBtn.addEventListener('click', openInvitation);
+  if (landing) {
+    /* Whole cover is tappable — button is the primary affordance */
+    landing.addEventListener('click', function (e) {
+      if (e.target.closest && e.target.closest('a, button')) return;
+      openInvitation();
+    });
+  }
+  if (skipBtn) skipBtn.addEventListener('click', finishReveal);
+
+  if (video) {
+    video.addEventListener('ended', finishReveal);
+    video.addEventListener('error', function () {
+      if (opening && !finished) finishReveal();
+    });
+    video.addEventListener('timeupdate', function () {
+      if (video.duration && video.duration - video.currentTime < 0.12) finishReveal();
+    });
+    /* Re-warm hero mid-playback in case the early pass was aborted */
+    video.addEventListener('playing', function () { ensureHeroReady(); }, { once: true });
   }
 
   /* ---------------------------------------------------------

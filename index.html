@@ -72,8 +72,9 @@
   }
   </script>
 
-  <!-- Critical media only: cover and hero -->
+  <!-- Critical media only: cover, intro video, hero -->
   <link rel="preload" as="image" href="assets/images/gallery/gate-couple.png" fetchpriority="high">
+  <link rel="preload" as="video" href="vedio.mp4" type="video/mp4">
   <link rel="preload" as="audio" href="assets/audio/music.mp3" type="audio/mpeg">
   <link rel="preload" as="image" href="hero.png?v=2">
 
@@ -81,7 +82,7 @@
   <link rel="stylesheet" href="css/scenes.css">
 </head>
 
-<body class="is-locked gate-active">
+<body class="is-locked">
 
   <!-- ============================================================
      ICON SPRITE  ·  all decorative motifs are inline SVG
@@ -178,46 +179,77 @@
 
 
   <!-- ============================================================
-     OPENING GATE  ·  Initial entrance screen
+     1 · LANDING COVER  ·  original opening — tap to open invitation
      ============================================================ -->
-  <div id="gate">
-    <div class="gate-image">
-      <img src="assets/images/gallery/gate-couple.png" alt="Muhammed Ajmal and Rosina Thesni" />
+  <section id="landing" class="scene--screen" aria-label="Wedding invitation cover">
+    <div class="landing-media">
+      <img id="coverImg" class="cover-img section-bg" src="assets/images/gallery/gate-couple.png" alt=""
+        decoding="async" fetchpriority="high">
+      <div class="cover-fallback" aria-hidden="true"></div>
     </div>
-    <div class="gate-fade"></div>
-    <div class="gate-vignette"></div>
 
-    <button type="button" id="gate-enter" class="gate-content" aria-label="Tap to open the invitation">
-      <span class="gate-corner tl"></span>
-      <span class="gate-corner tr"></span>
-      <span class="gate-corner bl"></span>
-      <span class="gate-corner br"></span>
+    <div class="rays rays--warm" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="temple-glow" aria-hidden="true"></div>
+    <div class="section-overlay landing-overlay" aria-hidden="true"></div>
 
-      <span class="gate-bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</span>
-      <span class="gate-translation">In the Name of Allah, the Most Gracious, the Most Merciful</span>
+    <div class="landing-inner section-content">
+      <p class="landing-eyebrow">
+        <span class="ml" lang="ar">بسم الله الرحمن الرحيم</span>
+        <span class="en">IN THE NAME OF ALLAH: THE MOST BENEFICENT, THE MOST MERCIFUL</span>
+      </p>
 
-      <span class="gate-ornament">
-        <span class="gate-line"></span>
-        <span class="gate-diamond"></span>
-        <span class="gate-line"></span>
-      </span>
+      <div class="divider divider--sm" aria-hidden="true">
+        <span class="divider-line"></span>
+        <svg class="ico" aria-hidden="true">
+          <use href="#i-lotus"></use>
+        </svg>
+        <span class="divider-line"></span>
+      </div>
 
-      <span class="gate-welcoming">Cordially Invites You</span>
-      <span class="gate-label">To the Wedding of</span>
-      <span class="gate-names">Muhammed Ajmal &amp; Rosina Thesni</span>
-      <span class="gate-date">14 · November · 2026</span>
+      <h1 class="landing-names">
+        <span class="n">Muhammed Ajmal</span>
+        <span class="amp">&amp;</span>
+        <span class="n">Rosina Thesni</span>
+      </h1>
 
-      <span class="gate-tap">
-        <span class="gate-tap-ring"></span>
-        <span class="gate-tap-icon"><svg class="ico"><use href="#i-lamp"></use></svg></span>
-      </span>
-      <span class="gate-tap-text">Tap to Open Invitation</span>
-    </button>
-  </div>
+      <p class="landing-date">14 · 11 · 2026</p>
+
+      <button id="openBtn" class="btn-open" type="button">
+        <span class="btn-open__glow" aria-hidden="true"></span>
+        <span class="btn-open__ring" aria-hidden="true"></span>
+        <span class="btn-open__inner">
+          <svg class="ico btn-open__lamp" aria-hidden="true">
+            <use href="#i-lamp"></use>
+          </svg>
+          <span class="btn-open__label">
+            <span class="btn-open__en">Open Invitation</span>
+            <span class="btn-open__ml">Insha Allah</span>
+          </span>
+        </span>
+        <span class="btn-open__shimmer" aria-hidden="true"></span>
+      </button>
+
+      <p class="landing-hint" aria-hidden="true">Tap to begin</p>
+    </div>
+  </section>
 
 
   <!-- ============================================================
-     THE SITE
+     2 · INVITATION REVEAL VIDEO  ·  original video opening
+     ============================================================ -->
+  <section id="reveal" aria-hidden="true">
+    <video id="revealVideo" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture
+      controlslist="nodownload noplaybackrate noremoteplayback">
+      <source src="vedio.mp4" type="video/mp4">
+    </video>
+    <div class="reveal-fade" aria-hidden="true"></div>
+    <button id="skipBtn" class="btn-skip" type="button" hidden>Skip</button>
+  </section>
+
+
+  <!-- ============================================================
+     3 · THE SITE
      ============================================================ -->
   <main id="site">
 
@@ -410,9 +442,9 @@
                 <use href="#i-jasmine"></use>
               </svg></span>
             <div class="tl-body">
-              <p class="tl-date">18 September 2026</p>
+              <p class="tl-date">18 September 2025</p>
               <h3 class="tl-title">Family Meet</h3>
-              <p class="tl-text">"Two families met, two hearts aligned, and a lifelong journey began."</p>
+              <p class="tl-text">"Alhamdulillah, two families met and a beautiful new chapter began."</p>
             </div>
           </li>
 
@@ -421,7 +453,7 @@
                 <use href="#i-lamp"></use>
               </svg></span>
             <div class="tl-body">
-              <p class="tl-date">28 September 2025 · Insha Allah</p>
+              <p class="tl-date">28 September 2025</p>
               <h3 class="tl-title">Nikah — Sacred Union</h3>
               <p class="tl-text">"Held together by faith, bound by love, forever sealed in a sacred vow."</p>
             </div>
@@ -550,13 +582,87 @@
     </section>
 
 
-    <!-- ---------- THE BIG DAY: WEDDING & RECEPTION ---------- -->
+    <!-- ---------- PROGRAMME 1 : BRIDE'S HOME VISIT ---------- -->
+    <section id="brideVisit" class="scene scene--flow scene--ivory">
+      <img class="section-bg" src="assets/images/decorations/wash-ivory.svg" alt="" loading="lazy" decoding="async">
+      <div class="section-overlay" aria-hidden="true"></div>
+      <div class="section-content">
+        <div class="sec-head reveal">
+          <p class="kicker">Programme One</p>
+          <h2 class="sec-title">Bride's Home Visit</h2>
+          <div class="divider" aria-hidden="true">
+            <span class="divider-line"></span>
+            <svg class="ico" aria-hidden="true">
+              <use href="#i-jasmine"></use>
+            </svg>
+            <span class="divider-line"></span>
+          </div>
+          <p class="sec-note">Guests are warmly welcome to visit the bride's home throughout the day and share in
+            the joy of this celebration.</p>
+        </div>
+
+        <div class="lux-card lux-card--light reveal" data-delay="1">
+          <div class="lux-card__col">
+            <p class="lux-eyebrow">You are cordially invited</p>
+            <h3 class="lux-day">Bride's Home Visit</h3>
+            <p class="lux-time">10:00 AM – 11:00 PM</p>
+          </div>
+          <span class="lux-card__rule" aria-hidden="true"></span>
+          <div class="lux-card__col">
+            <p class="lux-k"><svg class="ico">
+                <use href="#i-clock"></use>
+              </svg> All Day</p>
+            <p class="lux-v">Open House</p>
+            <p class="lux-note">Drop by any time between 10:00 AM and 11:00 PM to meet the bride's family and bless
+              the couple.</p>
+          </div>
+        </div>
+
+        <form id="rsvpBrideForm" class="rsvp-card reveal" data-delay="2" data-event-type="bride_home_visit"
+          novalidate>
+          <div class="sec-head" style="margin-bottom:0;">
+            <p class="kicker" style="margin-top:0;">RSVP</p>
+            <h3 class="sec-title" style="font-size:clamp(20px,4.4vw,26px);">RSVP for Bride's Home Visit</h3>
+          </div>
+
+          <div class="rsvp-row">
+            <div class="rsvp-field">
+              <label for="brideRsvpName">Full Name</label>
+              <input type="text" id="brideRsvpName" name="name" required placeholder="Your name">
+            </div>
+            <div class="rsvp-field">
+              <label for="brideRsvpGuests">Number of People Attending</label>
+              <input type="number" id="brideRsvpGuests" name="guests" min="1" max="20" value="1" inputmode="numeric"
+                required>
+            </div>
+          </div>
+
+          <div class="rsvp-field rsvp-field--full">
+            <span class="rsvp-label-static">Will You Attend?</span>
+            <div class="rsvp-toggle" role="radiogroup" aria-label="Will you attend the Bride's Home Visit?">
+              <input type="radio" id="brideRsvpYes" name="attend" value="yes" checked>
+              <label for="brideRsvpYes">Yes, I'll Attend</label>
+              <input type="radio" id="brideRsvpNo" name="attend" value="no">
+              <label for="brideRsvpNo">No, I Can't Attend</label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn--gold rsvp-submit">
+            <span class="rsvp-btn-text">Send RSVP</span>
+          </button>
+          <p class="rsvp-status" id="brideRsvpStatus" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
+
+    <!-- ---------- PROGRAMME 2 : WEDDING & RECEPTION ---------- -->
     <section id="reception" class="scene scene--flow scene--dark">
       <img class="section-bg" src="assets/images/decorations/wash-dark.svg" alt="" loading="lazy" decoding="async">
       <div class="section-overlay" aria-hidden="true"></div>
       <div class="section-content">
         <div class="sec-head reveal">
-          <p class="kicker">The Big Day</p>
+          <p class="kicker">Programme Two · The Big Day</p>
           <h2 class="sec-title">Wedding &amp; Reception</h2>
           <div class="divider divider--light" aria-hidden="true">
             <span class="divider-line"></span>
@@ -594,14 +700,14 @@
     </section>
 
 
-    <!-- ---------- RSVP ---------- -->
+    <!-- ---------- RSVP FOR WEDDING ---------- -->
     <section id="rsvp" class="scene scene--flow scene--beige">
       <img class="section-bg" src="assets/images/decorations/wash-beige.svg" alt="" loading="lazy" decoding="async">
       <div class="section-overlay" aria-hidden="true"></div>
       <div class="section-content">
         <div class="sec-head reveal">
           <p class="kicker">Kindly Respond</p>
-          <h2 class="sec-title">RSVP</h2>
+          <h2 class="sec-title">RSVP for Wedding</h2>
           <div class="divider" aria-hidden="true">
             <span class="divider-line"></span>
             <svg class="ico" aria-hidden="true">
@@ -609,11 +715,12 @@
             </svg>
             <span class="divider-line"></span>
           </div>
-          <p class="sec-note">Your presence is the greatest gift. Please let us know if you'll be joining us, and
-            how many members will be coming along.</p>
+          <p class="sec-note">Your presence is the greatest gift. Please let us know if you'll be joining us for the
+            Wedding &amp; Reception, and how many members will be coming along.</p>
         </div>
 
-        <form id="rsvpForm" class="rsvp-card reveal" data-delay="1" novalidate>
+        <form id="rsvpWeddingForm" class="rsvp-card reveal" data-delay="1" data-event-type="wedding_reception"
+          novalidate>
           <div class="rsvp-row">
             <div class="rsvp-field">
               <label for="rsvpName">Full Name</label>
@@ -621,29 +728,29 @@
             </div>
             <div class="rsvp-field">
               <label for="rsvpPhone">Phone Number</label>
-              <input type="tel" id="rsvpPhone" name="phone" placeholder="Contact number">
+              <input type="tel" id="rsvpPhone" name="phone" required placeholder="Contact number">
             </div>
           </div>
 
           <div class="rsvp-row">
             <div class="rsvp-field">
-              <label for="rsvpGuests">Number of Members Coming</label>
+              <label for="rsvpGuests">Number of People Attending</label>
               <input type="number" id="rsvpGuests" name="guests" min="1" max="20" value="1" inputmode="numeric"
                 required>
             </div>
             <div class="rsvp-field">
-              <span class="rsvp-label-static">Will you attend?</span>
-              <div class="rsvp-toggle" role="radiogroup" aria-label="Will you attend?">
+              <span class="rsvp-label-static">Will You Attend?</span>
+              <div class="rsvp-toggle" role="radiogroup" aria-label="Will you attend the Wedding?">
                 <input type="radio" id="rsvpYes" name="attend" value="yes" checked>
-                <label for="rsvpYes">Joyfully Accept</label>
+                <label for="rsvpYes">Yes, I'll Attend</label>
                 <input type="radio" id="rsvpNo" name="attend" value="no">
-                <label for="rsvpNo">Regretfully Decline</label>
+                <label for="rsvpNo">No, I Can't Attend</label>
               </div>
             </div>
           </div>
 
           <div class="rsvp-field rsvp-field--full">
-            <label for="rsvpMessage">Message for the Couple (optional)</label>
+            <label for="rsvpMessage">Optional Message</label>
             <textarea id="rsvpMessage" name="message" rows="3"
               placeholder="Share your wishes and prayers..."></textarea>
           </div>
@@ -651,8 +758,51 @@
           <button type="submit" class="btn btn--gold rsvp-submit">
             <span class="rsvp-btn-text">Send RSVP</span>
           </button>
-          <p class="rsvp-status" id="rsvpStatus" role="status" aria-live="polite"></p>
+          <p class="rsvp-status" id="rsvpWeddingStatus" role="status" aria-live="polite"></p>
         </form>
+      </div>
+    </section>
+
+
+    <!-- ---------- WISHES WALL ---------- -->
+    <section id="wishes" class="scene scene--flow scene--dark">
+      <img class="section-bg" src="assets/images/decorations/wash-dark.svg" alt="" loading="lazy" decoding="async">
+      <div class="section-overlay" aria-hidden="true"></div>
+      <div class="section-content">
+        <div class="sec-head reveal">
+          <p class="kicker">Friends &amp; Family</p>
+          <h2 class="sec-title">Wishes Wall</h2>
+          <div class="divider divider--light" aria-hidden="true">
+            <span class="divider-line"></span>
+            <svg class="ico" aria-hidden="true">
+              <use href="#i-jasmine"></use>
+            </svg>
+            <span class="divider-line"></span>
+          </div>
+          <p class="sec-note">Leave a wish for the couple and be part of their beautiful journey.</p>
+        </div>
+
+        <form id="wishForm" class="rsvp-card rsvp-card--dark reveal" data-delay="1" novalidate>
+          <div class="rsvp-field">
+            <label for="wishName">Your Name</label>
+            <input type="text" id="wishName" name="name" required placeholder="Your name">
+          </div>
+
+          <div class="rsvp-field rsvp-field--full">
+            <label for="wishText">Your Wish</label>
+            <textarea id="wishText" name="wish" rows="3" required
+              placeholder="Write a wish for Muhammed Ajmal &amp; Rosina Thesni..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn--gold rsvp-submit">
+            <span class="rsvp-btn-text">Send Your Wish</span>
+          </button>
+          <p class="rsvp-status" id="wishStatus" role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="wishes-grid" id="wishesGrid" aria-live="polite">
+          <p class="wishes-status" id="wishesLoading">Loading wishes…</p>
+        </div>
       </div>
     </section>
 

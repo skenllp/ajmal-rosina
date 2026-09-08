@@ -1,24 +1,32 @@
-# RSVP → Google Sheet setup
+# RSVP + Wishes Wall → Google Sheet setup
 
-The RSVP section on the site (`#rsvp`) posts each response — name, phone,
-**number of members coming**, attending yes/no, and an optional message —
-to a Google Sheet. The sheet keeps a live, always-correct **total of how
-many members are coming** using formulas, so you never have to add it up
-by hand.
+The site has **three** things that talk to Google Sheets through one Apps
+Script Web App:
+
+1. **RSVP for Bride's Home Visit** (`#rsvpBrideForm`) — name, number of
+   people attending, attending yes/no. **No phone number is collected.**
+2. **RSVP for Wedding** (`#rsvpWeddingForm`) — name, phone, number of
+   people attending, attending yes/no, optional message.
+3. **Wishes Wall** (`#wishForm`) — name + wish, moderated before it's
+   shown publicly on the site.
+
+Each goes to its own tab in the same spreadsheet, and each RSVP tab keeps
+a live, always-correct **total number of people attending** (not a count
+of submissions) using spreadsheet formulas.
 
 ## 1. Create the Google Sheet
 
 1. Go to [sheets.google.com](https://sheets.google.com) and create a new,
    blank spreadsheet. Name it something like "Ajmal & Rosina — RSVPs".
 2. You don't need to add any headers or columns yourself — the script
-   creates them automatically the first time someone RSVPs.
+   creates each tab automatically the first time it's needed.
 
 ## 2. Add the Apps Script
 
 1. In the sheet, go to **Extensions → Apps Script**.
 2. Delete the placeholder code in `Code.gs` and paste in the contents of
    `google-apps-script/Code.gs` from this project.
-3. Click **Save** (the disk icon), and name the project (e.g. "RSVP API").
+3. Click **Save** (the disk icon), and name the project (e.g. "Wedding API").
 
 ## 3. Deploy it as a Web App
 
@@ -38,34 +46,57 @@ by hand.
 1. Open `js/rsvp.js`.
 2. Replace this line near the top:
    ```js
-   var RSVP_ENDPOINT = 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+   var ENDPOINT = 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
    ```
    with your Web app URL:
    ```js
-   var RSVP_ENDPOINT = 'https://script.google.com/macros/s/AKfycb.../exec';
+   var ENDPOINT = 'https://script.google.com/macros/s/AKfycb.../exec';
    ```
-3. Save, re-upload/redeploy the site, and submit a test RSVP.
+3. Save, re-upload/redeploy the site, and submit a test RSVP and a test wish.
 
 ## Reading the results
 
-Open the Google Sheet — a tab named **RSVP** will contain one row per
-response (Timestamp, Name, Phone, Guests, Attending, Message), and a
-summary box in columns H–I:
+Open the Google Sheet — it will contain three tabs:
+
+### "Bride Home Visit RSVP"
+Columns: `Timestamp, Name, Guests, Attending`. No phone number column.
+Summary box in columns F–G:
 
 | | |
 |---|---|
-| **Total Members Coming** | live sum of the Guests column, counting only "Yes" responses |
-| **Total RSVPs Accepted** | count of "Yes" responses |
-| **Total RSVPs Declined** | count of "No" responses |
+| **Total Confirmed People** | live `SUMIF` of the Guests column, counting only "Yes" rows |
+| **Total Confirmed RSVPs** | `COUNTIF` of "Yes" rows |
+| **Total Declined RSVPs** | `COUNTIF` of "No" rows |
 
-These are spreadsheet formulas (`SUMIF` / `COUNTIF`), so the total updates
-instantly as responses come in — no need to re-run anything.
+### "Wedding RSVP"
+Columns: `Timestamp, Name, Phone, Guests, Attending, Message`. Same style
+of summary box, in columns H–I.
+
+### "Wishes"
+Columns: `Timestamp, Name, Wish, Approved`. Every new wish is inserted
+with `Approved = FALSE`. **The website only shows wishes where you've
+manually set `Approved` to `TRUE`** — this is the moderation step, so
+open the sheet, review new wishes, and flip the checkbox/value to `TRUE`
+for the ones you want public.
+
+The website polls `?action=wishes` for approved wishes on load and every
+couple of minutes while the tab is open, so newly-approved wishes appear
+without anyone having to edit the site.
+
+## Privacy
+
+- The Bride's Home Visit and Wedding RSVP tabs (including phone numbers,
+  guest counts, and messages) are only visible to you in the Google Sheet
+  — the website never reads or displays them.
+- The `?action=wishes` endpoint only ever returns `name` + `wish` for
+  rows marked `Approved = TRUE`. It never returns phone numbers, RSVP
+  data, or unapproved wishes.
 
 ## Notes
 
 - If you ever change the deployment (e.g. redeploy a new version), Apps
   Script gives you a new URL unless you choose **Manage deployments →
   Edit → same deployment** — update `js/rsvp.js` if the URL changes.
-- The form works without JavaScript errors even before you connect the
+- Every form works without JavaScript errors even before you connect the
   endpoint — it will just show a friendly "not connected yet" message
   instead of silently failing.

@@ -1850,6 +1850,40 @@ body:not(.is-revealed) #site * {
   line-height: 1.8
 }
 
+/* ---------- lux-card light variant · used on ivory/beige scenes ---------- */
+.lux-card--light {
+  background: linear-gradient(150deg, rgba(58, 42, 32, .05), rgba(58, 42, 32, .02));
+  border-color: rgba(193, 150, 47, .38);
+}
+
+.lux-card--light::before,
+.lux-card--light::after {
+  border-color: rgba(193, 150, 47, .6);
+}
+
+.lux-card--light .lux-eyebrow {
+  color: var(--gold-dk);
+}
+
+.lux-card--light .lux-day,
+.lux-card--light .lux-v {
+  color: var(--ink);
+}
+
+.lux-card--light .lux-date,
+.lux-card--light .lux-time,
+.lux-card--light .lux-sub {
+  color: var(--ink-soft);
+}
+
+.lux-card--light .lux-note {
+  color: var(--ink-soft);
+}
+
+.lux-card--light .lux-k {
+  color: var(--gold-dk);
+}
+
 /* ---------- venue ---------- */
 .venue-grid {
   display: grid;
@@ -2198,6 +2232,105 @@ body:not(.is-revealed) #site * {
 
 .rsvp-status--error {
   color: var(--maroon);
+}
+
+/* ---------- rsvp-card dark variant · used on scene--dark (Wishes Wall) ---------- */
+.rsvp-card--dark {
+  background: linear-gradient(150deg, rgba(255, 246, 225, .09), rgba(255, 246, 225, .03));
+  border-color: rgba(231, 201, 122, .3);
+}
+
+.rsvp-card--dark .rsvp-field label,
+.rsvp-card--dark .rsvp-label-static {
+  color: rgba(243, 233, 214, .75);
+}
+
+.rsvp-card--dark .rsvp-field input,
+.rsvp-card--dark .rsvp-field textarea {
+  color: #FBF3E2;
+  background: rgba(255, 255, 255, .06);
+  border-color: rgba(231, 201, 122, .32);
+}
+
+.rsvp-card--dark .rsvp-field input::placeholder,
+.rsvp-card--dark .rsvp-field textarea::placeholder {
+  color: rgba(243, 233, 214, .38);
+}
+
+.rsvp-card--dark .rsvp-toggle label {
+  color: rgba(243, 233, 214, .75);
+  background: rgba(255, 255, 255, .05);
+  border-color: rgba(231, 201, 122, .35);
+}
+
+.rsvp-card--dark .rsvp-status--success {
+  color: var(--gold-lt);
+}
+
+/* ---------- wishes wall ---------- */
+.wishes-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  max-width: 1000px;
+  margin: 44px auto 0;
+}
+
+.wish-card {
+  position: relative;
+  padding: 28px 26px;
+  background: linear-gradient(150deg, rgba(255, 246, 225, .09), rgba(255, 246, 225, .03));
+  border: 1px solid rgba(231, 201, 122, .3);
+  box-shadow: var(--shadow-s);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .6s var(--ease), transform .6s var(--ease);
+}
+
+.wish-card.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.wish-card::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(231, 201, 122, .16);
+  pointer-events: none;
+}
+
+.wish-quote-ico {
+  width: 20px;
+  height: 20px;
+  color: var(--gold-lt);
+  stroke-width: 3.4;
+  margin-bottom: 12px;
+  opacity: .85;
+}
+
+.wish-text {
+  font-family: var(--f-display);
+  font-size: 17px;
+  font-style: italic;
+  line-height: 1.7;
+  color: #FBF3E2;
+}
+
+.wish-author {
+  margin-top: 14px;
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gold-lt);
+}
+
+.wishes-status {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(243, 233, 214, .65);
+  padding: 12px 0;
 }
 
 /* ---------- gallery · cinematic photo wall ---------- */
@@ -3184,337 +3317,12 @@ body.finale-particles .finale-fallback {
 }
 
 
-/* ============================================================
-   OPENING GATE (click-to-enter invitation)
-   ============================================================ */
-body.gate-active {
-  overflow: hidden;
-  height: 100vh;
-  height: 100dvh;
-}
-
-#gate {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  overflow: hidden;
-  background: var(--night);
-}
-
-#gate.gate-hidden {
-  display: none;
-}
-
-/* Couple photo backdrop */
-.gate-image {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-}
-
-.gate-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
-  filter: sepia(5%) saturate(95%) brightness(0.82);
-  transform: scale(1.08);
-  transition: transform 6s cubic-bezier(0.19, 1, 0.22, 1), filter 1.2s ease;
-}
-
-/* Slow ambient zoom while gate is open */
-#gate:not(.gate-closing) .gate-image img {
-  animation: gateSlowZoom 14s ease-in-out infinite alternate;
-}
-
-@keyframes gateSlowZoom {
-  from { transform: scale(1.08); }
-  to { transform: scale(1.16); }
-}
-
-/* Dark fade overlay */
-.gate-fade {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to bottom,
-      rgba(20, 14, 8, 0.55) 0%,
-      rgba(20, 14, 8, 0.30) 30%,
-      rgba(36, 24, 17, 0.50) 60%,
-      rgba(14, 10, 6, 0.92) 100%
-    );
-}
-
-.gate-vignette {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at center, transparent 35%, rgba(14, 10, 6, 0.65) 100%);
-  pointer-events: none;
-}
-
-/* Content sits above the image + fade */
-.gate-content {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  padding: 40px 24px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  color: inherit;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Gold corner frame */
-.gate-corner {
-  position: absolute;
-  width: 44px;
-  height: 44px;
-  border-color: var(--gold);
-  border-style: solid;
-  opacity: 0.75;
-}
-
-.gate-corner.tl { top: 28px; left: 28px; border-width: 1px 0 0 1px; }
-.gate-corner.tr { top: 28px; right: 28px; border-width: 1px 1px 0 0; }
-.gate-corner.bl { bottom: 28px; left: 28px; border-width: 0 0 1px 1px; }
-.gate-corner.br { bottom: 28px; right: 28px; border-width: 0 1px 1px 0; }
-
-.gate-bismillah {
-  font-family: "Noto Sans Malayalam", "Nirmala UI", system-ui, sans-serif;
-  font-size: clamp(24px, 4.5vw, 42px);
-  color: var(--gold-lt);
-  letter-spacing: 0.04em;
-  text-shadow: 0 2px 24px rgba(193, 150, 47, 0.40);
-  opacity: 0;
-  filter: blur(6px);
-  transform: translateY(-16px) scale(0.94);
-  animation: gateBismillahIn 1.6s cubic-bezier(0.19, 1, 0.22, 1) 0.3s forwards,
-             gateBismillahGlow 3.5s ease-in-out 2s infinite;
-  margin-bottom: 28px;
-}
-
-@keyframes gateBismillahIn {
-  0% { opacity: 0; filter: blur(6px); transform: translateY(-16px) scale(0.94); }
-  100% { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
-}
-
-@keyframes gateBismillahGlow {
-  0%, 100% { text-shadow: 0 2px 24px rgba(193, 150, 47, 0.35); }
-  50% { text-shadow: 0 2px 34px rgba(193, 150, 47, 0.65); }
-}
-
-.gate-translation {
-  display: block;
-  font-family: var(--f-display);
-  font-style: italic;
-  font-size: clamp(11px, 1.8vw, 14px);
-  letter-spacing: 0.02em;
-  color: rgba(251, 247, 239, 0.65);
-  opacity: 0;
-  animation: fadeUp 1.4s ease 0.9s forwards;
-  margin-bottom: 26px;
-}
-
-.gate-ornament {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 24px;
-  opacity: 0;
-  animation: fadeIn 1s ease 1s forwards;
-}
-
-.gate-line {
-  width: 52px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold));
-}
-
-.gate-line:last-child {
-  background: linear-gradient(90deg, var(--gold), transparent);
-}
-
-.gate-diamond {
-  width: 7px;
-  height: 7px;
-  background: var(--gold);
-  transform: rotate(45deg);
-}
-
-.gate-welcoming {
-  font-family: var(--f-title);
-  font-size: clamp(15px, 2.8vw, 20px);
-  font-weight: 400;
-  letter-spacing: 0.25em;
-  color: var(--gold-lt);
-  text-transform: uppercase;
-  margin-bottom: 12px;
-  opacity: 0;
-  animation: fadeUp 1s ease 1.1s forwards;
-  text-shadow: 0 2px 10px rgba(193, 150, 47, 0.3);
-}
-
-.gate-label {
-  font-size: 11px;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: var(--gold);
-  opacity: 0;
-  animation: fadeUp 1s ease 1.3s forwards;
-  margin-bottom: 18px;
-}
-
-.gate-names {
-  font-family: var(--f-display);
-  font-size: clamp(40px, 8vw, 72px);
-  color: var(--ivory);
-  line-height: 1;
-  opacity: 0;
-  animation: fadeUp 1.1s ease 1.4s forwards;
-  margin-bottom: 14px;
-  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
-  font-weight: 300;
-}
-
-.gate-date {
-  font-family: var(--f-title);
-  font-size: clamp(13px, 2vw, 16px);
-  letter-spacing: 0.3em;
-  color: rgba(239, 227, 207, 0.70);
-  opacity: 0;
-  animation: fadeUp 1s ease 1.6s forwards;
-  margin-bottom: 56px;
-}
-
-/* Tap-to-open affordance */
-.gate-tap {
-  position: relative;
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  animation: fadeIn 1s ease 2s forwards;
-  margin-bottom: 14px;
-}
-
-.gate-tap-ring {
-  position: absolute;
-  inset: 0;
-  border: 1px solid var(--gold);
-  border-radius: 50%;
-  animation: gateTapPulse 2.2s ease-out infinite;
-}
-
-.gate-tap-icon {
-  position: relative;
-  z-index: 1;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--gold-lt), var(--gold-dk));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--night);
-  box-shadow: 0 8px 24px rgba(193, 150, 47, 0.35);
-}
-
-.gate-tap-icon .ico {
-  width: 20px;
-  height: 20px;
-  stroke-width: 3.6;
-}
-
-@keyframes gateTapPulse {
-  0% { transform: scale(1); opacity: 0.8; }
-  100% { transform: scale(1.7); opacity: 0; }
-}
-
-.gate-tap-text {
-  font-size: 11px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: rgba(239, 227, 207, 0.75);
-  opacity: 0;
-  animation: fadeIn 1s ease 2.1s forwards;
-}
-
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* ===== GATE CLOSING TRANSITION ===== */
-#gate.gate-closing .gate-content > * {
-  transition: opacity 0.6s ease, transform 0.6s ease, filter 0.6s ease;
-}
-
-#gate.gate-closing .gate-bismillah {
-  opacity: 0;
-  filter: blur(10px);
-  transform: translateY(-24px) scale(1.06);
-  animation: none;
-}
-
-#gate.gate-closing .gate-ornament,
-#gate.gate-closing .gate-welcoming,
-#gate.gate-closing .gate-label,
-#gate.gate-closing .gate-translation,
-#gate.gate-closing .gate-date,
-#gate.gate-closing .gate-tap,
-#gate.gate-closing .gate-tap-text {
-  opacity: 0;
-  transform: translateY(-10px);
-  animation: none;
-}
-
-#gate.gate-closing .gate-names {
-  opacity: 0;
-  transform: translateY(-10px) scale(1.04);
-  animation: none;
-  transition-delay: 0.08s;
-}
-
-#gate.gate-closing .gate-corner {
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-
-#gate.gate-closing .gate-fade,
-#gate.gate-closing .gate-vignette {
-  transition: opacity 0.9s ease 0.15s;
-  opacity: 0;
-}
-
-#gate.gate-closing .gate-image img {
-  transition: transform 1.1s cubic-bezier(0.19, 1, 0.22, 1), filter 1.1s ease;
-  transform: scale(1.3);
-  filter: sepia(5%) saturate(95%) brightness(1);
-}
-
-#gate.gate-closing {
-  transition: opacity 0.9s ease 0.35s, visibility 0.9s ease 0.35s;
-  opacity: 0;
-  pointer-events: none;
-}
-
-
-/* Hero section animations after gate opens */
+/* Hero content reveal animations, triggered once the reveal video finishes */
 #hero .section-content {
   position: relative;
 }
